@@ -257,6 +257,6 @@ python app.py
 
 ---
 
-**Author**: `gowtha2006`  
+**Author**: `gowthami`  
 **Date**: August 2026  
 **Course / Assessment**: Assessment-1 – Machine Learning Project
