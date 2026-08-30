@@ -1,0 +1,63 @@
+{
+    "best_model": "Linear Regression",
+    "features": [
+        "study_hours",
+        "attendance",
+        "previous_score",
+        "assignment_score",
+        "internal_marks",
+        "sleep_hours",
+        "participation",
+        "parental_support",
+        "extracurricular"
+    ],
+    "metrics": {
+        "Linear Regression": {
+            "mae": 2.728,
+            "mse": 11.796,
+            "rmse": 3.435,
+            "r2": 0.9124
+        },
+        "Decision Tree": {
+            "mae": 4.406,
+            "mse": 30.878,
+            "rmse": 5.557,
+            "r2": 0.7708
+        },
+        "Random Forest": {
+            "mae": 3.343,
+            "mse": 18.308,
+            "rmse": 4.279,
+            "r2": 0.8641
+        }
+    },
+    "feature_importance": {
+        "previous_score": 0.5429,
+        "study_hours": 0.2454,
+        "internal_marks": 0.0885,
+        "assignment_score": 0.0571,
+        "attendance": 0.033,
+        "sleep_hours": 0.0136,
+        "participation": 0.0135,
+        "parental_support": 0.0037,
+        "extracurricular": 0.0023
+    },
+    "dataset_stats": {
+        "total_students": 1200,
+        "mean_final_score": 73.0,
+        "median_final_score": 73.0,
+        "min_final_score": 38.0,
+        "max_final_score": 100.0,
+        "averages": {
+            "study_hours": 4.59,
+            "attendance": 86.3,
+            "previous_score": 67.57,
+            "assignment_score": 57.93,
+            "internal_marks": 15.38,
+            "sleep_hours": 6.77,
+            "participation": 6.33,
+            "parental_support": 2.03,
+            "extracurricular": 0.6
+        }
+    }
+}

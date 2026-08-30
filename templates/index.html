@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Performance AI | Score Predictor</title>
+    <meta name="description" content="Predict student academic performance and final examination scores using machine learning regression algorithms.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="app-wrapper">
+        <!-- Navigation Header -->
+        <header class="navbar">
+            <div class="nav-brand">
+                <div class="brand-icon">
+                    <i data-lucide="graduation-cap"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>EduPredict <span class="badge-ai">ML Predictor</span></h1>
+                    <p>Machine Learning Final Score & Academic Performance Predictor</p>
+                </div>
+            </div>
+            
+            <!-- Quick Top Stats -->
+            <div class="nav-stats">
+                <div class="stat-pill">
+                    <span class="stat-label">Model Accuracy (R²)</span>
+                    <span class="stat-value text-emerald" id="top-r2">91.2%</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="stat-label">Trained Records</span>
+                    <span class="stat-value text-indigo" id="top-samples">1,200 Students</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="stat-label">Backend Engine</span>
+                    <span class="stat-value text-sky" id="top-best-model">Linear Regression</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area: Dedicated Score Predictor -->
+        <main class="content-container">
+            <div class="grid-2col">
+                
+                <!-- Left Column: Input Form -->
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div>
+                            <h2><i data-lucide="user-check"></i> Student Profile Inputs</h2>
+                            <p class="card-subtitle">Adjust academic, attendance, and study factors to predict final score</p>
+                        </div>
+                        <!-- Preset Buttons -->
+                        <div class="preset-dropdown">
+                            <span class="preset-label">Presets:</span>
+                            <div class="preset-btn-group">
+                                <button type="button" class="btn-preset" id="preset-topper" title="High study, 95% attendance">Top Achiever</button>
+                                <button type="button" class="btn-preset" id="preset-average" title="Average values">Average</button>
+                                <button type="button" class="btn-preset" id="preset-struggling" title="Low study, 65% attendance">At-Risk</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form id="prediction-form" class="form-grid">
+                        
+                        <!-- 1. Previous Exam Score -->
+                        <div class="form-group">
+                            <div class="slider-header">
+                                <label for="previous_score"><i data-lucide="history"></i> Previous Exam Score</label>
+                                <div class="value-display"><span id="val_previous_score">70.0</span> / 100</div>
+                            </div>
+                            <input type="range" id="previous_score" min="30" max="100" step="0.5" value="70.0" class="custom-slider">
+                            <div class="slider-meta"><span>30 (Min)</span><span>100 (Max)</span></div>
+                        </div>
+
+                        <!-- 2. Study Hours -->
+                        <div class="form-group">
+                            <div class="slider-header">
+                                <label for="study_hours"><i data-lucide="clock"></i> Daily Study Hours</label>
+                                <div class="value-display"><span id="val_study_hours">4.5</span> hrs/day</div>
+                            </div>
+                            <input type="range" id="study_hours" min="1.0" max="10.0" step="0.1" value="4.5" class="custom-slider">
+                            <div class="slider-meta"><span>1.0 hr</span><span>10.0 hrs</span></div>
+                        </div>
+
+                        <!-- 3. Attendance Percentage -->
+                        <div class="form-group">
+                            <div class="slider-header">
+                                <label for="attendance"><i data-lucide="calendar-check"></i> Attendance Percentage</label>
+                                <div class="value-display"><span id="val_attendance">85.0</span> %</div>
+                            </div>
+                            <input type="range" id="attendance" min="45" max="100" step="0.5" value="85.0" class="custom-slider">
+                            <div class="slider-meta"><span>45%</span><span>100%</span></div>
+                        </div>
+
+                        <!-- 4. Assignment Score -->
+                        <div class="form-group">
+                            <div class="slider-header">
+                                <label for="assignment_score"><i data-lucide="file-check-2"></i> Assignment Score</label>
+                                <div class="value-display"><span id="val_assignment_score">65.0</span> / 100</div>
+                            </div>
+                            <input type="range" id="assignment_score" min="30" max="100" step="0.5" value="65.0" class="custom-slider">
+                            <div class="slider-meta"><span>30</span><span>100</span></div>
+                        </div>
+
+                        <!-- 5. Internal Marks -->
+                        <div class="form-group">
+                            <div class="slider-header">
+                                <label for="internal_marks"><i data-lucide="award"></i> Internal Marks</label>
+                                <div class="value-display"><span id="val_internal_marks">16.0</span> / 25</div>
+                            </div>
+                            <input type="range" id="internal_marks" min="8.0" max="25.0" step="0.5" value="16.0" class="custom-slider">
+                            <div class="slider-meta"><span>8.0</span><span>25.0 max</span></div>
+                        </div>
+
+                        <!-- 6. Sleep Hours -->
+                        <div class="form-group">
+                            <div class="slider-header">
+                                <label for="sleep_hours"><i data-lucide="moon"></i> Daily Sleep Hours</label>
+                                <div class="value-display"><span id="val_sleep_hours">7.0</span> hrs</div>
+                            </div>
+                            <input type="range" id="sleep_hours" min="4.0" max="10.0" step="0.5" value="7.0" class="custom-slider">
+                            <div class="slider-meta"><span>4.0 hrs</span><span>10.0 hrs</span></div>
+                        </div>
+
+                        <!-- 7. Class Participation -->
+                        <div class="form-group">
+                            <div class="slider-header">
+                                <label for="participation"><i data-lucide="message-square"></i> Class Participation</label>
+                                <div class="value-display"><span id="val_participation">6</span> / 10</div>
+                            </div>
+                            <input type="range" id="participation" min="1" max="10" step="1" value="6" class="custom-slider">
+                            <div class="slider-meta"><span>1 (Passive)</span><span>10 (Active)</span></div>
+                        </div>
+
+                        <!-- 8. Parental Guidance & Extracurriculars -->
+                        <div class="form-group-row">
+                            <div class="form-group-sub">
+                                <label for="parental_support"><i data-lucide="heart-handshake"></i> Parental Guidance</label>
+                                <select id="parental_support" class="form-select">
+                                    <option value="1">Low Support</option>
+                                    <option value="2" selected>Medium Support</option>
+                                    <option value="3">High Support</option>
+                                </select>
+                            </div>
+                            <div class="form-group-sub">
+                                <label for="extracurricular"><i data-lucide="activity"></i> Extracurriculars</label>
+                                <select id="extracurricular" class="form-select">
+                                    <option value="1" selected>Yes (Active)</option>
+                                    <option value="0">No (None)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="form-actions full-width">
+                            <button type="button" id="btn-predict" class="btn-primary">
+                                <i data-lucide="zap"></i>
+                                <span>Predict Final Score</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Right Column: Prediction Results & Actionable Advisories -->
+                <div class="results-column">
+                    
+                    <!-- Prediction Card -->
+                    <div class="glass-card result-card" id="result-card">
+                        <div class="card-header">
+                            <div>
+                                <h2><i data-lucide="pie-chart"></i> Predicted Final Score</h2>
+                                <p class="card-subtitle">ML Regression Model Inference</p>
+                            </div>
+                            <span class="badge" id="res-badge">Calculating...</span>
+                        </div>
+
+                        <div class="score-display-container">
+                            <div class="score-circle-wrapper">
+                                <svg class="progress-ring" width="180" height="180">
+                                    <circle class="progress-ring-bg" stroke="#1e293b" stroke-width="12" fill="transparent" r="76" cx="90" cy="90"/>
+                                    <circle id="score-ring" class="progress-ring-circle" stroke="#10b981" stroke-width="12" stroke-linecap="round" fill="transparent" r="76" cx="90" cy="90"/>
+                                </svg>
+                                <div class="score-center-text">
+                                    <span class="score-number" id="res-score">76.8</span>
+                                    <span class="score-max">/ 100</span>
+                                </div>
+                            </div>
+                            <div class="score-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Projected Grade</span>
+                                    <span class="detail-val text-emerald" id="res-grade">A / B+ (First Class)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Performance Level</span>
+                                    <span class="detail-val" id="res-level">Good</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Evaluation Summary</span>
+                                    <p class="detail-desc" id="res-summary">Solid performance with strong foundational metrics.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Radar Chart: Student Profile vs Cohort Average -->
+                        <div class="chart-box">
+                            <h3><i data-lucide="radar"></i> Student Profile vs. Cohort Average</h3>
+                            <div class="chart-wrapper-radar">
+                                <canvas id="radarChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Smart Personalized Recommendations -->
+                        <div class="recommendations-container">
+                            <h3><i data-lucide="lightbulb"></i> Personalized Recommendations & Action Plan</h3>
+                            <div class="recs-list" id="recommendations-list">
+                                <!-- Dynamic recommendations rendered via JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>🎓 <strong>Student Academic Performance Prediction System</strong> | Machine Learning Powered by Antigravity</p>
+            <p class="footer-sub">Trained with Scikit-Learn Regression Pipeline • All training, evaluation & metrics running on backend</p>
+        </footer>
+    </div>
+
+    <!-- Application Script -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
